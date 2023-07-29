@@ -31,6 +31,11 @@
     "settings.editor.selected.configurable": "editor.preferences.folding"
   }
 }]]></component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="open(2, 2);" />
+    </option>
+  </component>
   <component name="RunManager" selected="Application.Percolation">
     <configuration name="&lt;template&gt;" type="TestNG" default="true" selected="false">
       <option name="VM_PARAMETERS" value="-ea" />
@@ -78,25 +83,10 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/week01/Percolation.java</url>
-          <line>161</line>
-          <option name="timeStamp" value="61" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/week01/Percolation.java</url>
-          <line>159</line>
-          <option name="timeStamp" value="66" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/week01/Percolation.java</url>
-          <line>157</line>
-          <option name="timeStamp" value="67" />
+          <line>182</line>
+          <option name="timeStamp" value="71" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="Grid[6]" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>
