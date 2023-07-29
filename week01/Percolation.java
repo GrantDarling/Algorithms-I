@@ -7,28 +7,22 @@ public class Percolation {
     private static int ColSize;
     private static int[][] Grid;
     private static WeightedQuickUnionUF uf;
-    private static int advancedUpwards = 0;
 
-    private static void inputOutOfRange(int row, int col) {
+    private static void isInputOutOfRange(int row, int col) {
         if (row > RowSize)
             throw new IllegalArgumentException("Row input is too large");
         if (col > ColSize)
             throw new IllegalArgumentException("Column input is too large");
     }
 
-    //private static void
-
     // creates n-by-n grid, with all sites initially blocked
     public static int[][] percolation(int n) {
         if (n <= 0)
             throw new IllegalArgumentException("Row input is too large");
 
-        // set matrix of NxN two-dimensional array
-        int[][] matrix = new int[n][n];
-        // choose starting value
-        int value = -1;
-        // iterate through array and set value
-        for (int[] row : matrix) {
+        int[][] matrix = new int[n][n]; // set matrix of NxN two-dimensional array
+        int value = -1; // choose starting value
+        for (int[] row : matrix) { // iterate through array and set value
             Arrays.fill(row, value);
         }
 
@@ -37,7 +31,7 @@ public class Percolation {
 
     // opens the site (row, col) if it is not open already
     public static void open(int row, int col) {
-        //inputOutOfRange(row, col);
+        isInputOutOfRange(row, col);
 
         if (!isOpen(row, col)) {
             int currentRow = (row * Size);
@@ -48,37 +42,46 @@ public class Percolation {
 
     // is the site (row, col) open?
     public static boolean isOpen(int row, int col) {
-        // inputOutOfRange(row, col);
+        isInputOutOfRange(row, col);
         return Grid[row][col] != -1;
+    }
+
+    // connect all sites
+    public static void connectAllSites(int row, int col) {
+        int[][] Directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+        for (int[] direction : Directions) {
+            int RowDir = direction[0];
+            int ColDir = direction[1];
+
+            boolean NotOutOfBounds = (col + ColDir) <= ColSize && (col + ColDir) >= 0 && (row + RowDir) <= RowSize && (row + RowDir) >= 0;
+            if (NotOutOfBounds) {
+                boolean BothSitesAreOpen = isOpen(row, col) && Grid[row + RowDir][col + ColDir] != -1;
+                if (BothSitesAreOpen) {
+                    boolean SitesAreNotConnected = uf.find(Grid[row][col]) != uf.find(Grid[row + RowDir][col + ColDir]);
+                    if (SitesAreNotConnected) {
+                        uf.union(Grid[row][col], Grid[row + RowDir][col + ColDir]); // connect the sites
+                        Grid[row + RowDir][col + ColDir] = uf.find(Grid[row][col]); // update the grid to the root value
+                        connectAllSites(row + RowDir, col + ColDir); // check if full
+                    }
+                }
+            }
+        }
+
     }
 
     // is the site (row, col) full?
     public static boolean isFull(int row, int col) {
+        connectAllSites(row, col);
 
-// && col + 1 <= ColSize
-        if (col + 1 <= ColSize && isOpen(row, col) && Grid[row][col + 1] != -1 && uf.find(Grid[row][col]) != uf.find(Grid[row][col + 1])) {
-            uf.union(Grid[row][col], Grid[row][col + 1]);
-            Grid[row][col + 1] = uf.find(Grid[row][col]);
-            isFull(row, col + 1);
-        }
-// && col - 1 >= 0
-        if (col - 1 >= 0 && isOpen(row, col) && Grid[row][col - 1] != -1 && uf.find(Grid[row][col]) != uf.find(Grid[row][col - 1])) {
-            uf.union(Grid[row][col], Grid[row][col - 1]);
-            Grid[row][col - 1] = uf.find(Grid[row][col]);
-            isFull(row, col - 1);
-        }
-// && (row - 1) >= 0
-        //  !!! these should eventually be checked inside isOpen
-        if ((row - 1) >= 0 && isOpen(row, col) && Grid[row - 1][col] != -1 && uf.find(Grid[row][col]) != uf.find(Grid[row - 1][col])) {
-            uf.union(Grid[row][col], Grid[row - 1][col]);
-            Grid[row - 1][col] = uf.find(Grid[row][col]);
-            isFull(row - 1, col);
-        }
-// && row + 1 <= RowSize
-        if (row + 1 <= RowSize && isOpen(row, col) && Grid[row + 1][col] != -1 && uf.find(Grid[row][col]) != uf.find(Grid[row + 1][col])) {
-            uf.union(Grid[row][col], Grid[row + 1][col]);
-            Grid[row + 1][col] = uf.find(Grid[row][col]);
-            isFull(row + 1, col);
+        for (int i = 0; i <= ColSize; i++) {
+            boolean SiteIsOpen = Grid[row][col] != -1 && Grid[0][i] != -1;
+            if (SiteIsOpen) {
+                boolean SitesAreConnected = uf.find(Grid[row][col]) == uf.find(Grid[0][i]);
+                if (SitesAreConnected) {
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -88,7 +91,7 @@ public class Percolation {
     public static int numberOfOpenSites() {
         int TotalOpenSites = 0;
         for (int i = 0; i <= RowSize; i++)
-            for (int j = 0; j <= ColSize; j++)
+            for (int j = 0; j < ColSize; j++)
                 if (isFull(i, j))
                     TotalOpenSites++;
 
@@ -97,6 +100,7 @@ public class Percolation {
 
     // does the system percolate?
     public static boolean percolates() {
+
         return false;
     }
 
@@ -138,7 +142,22 @@ public class Percolation {
         open(8, 6);
         open(9, 6);
 
-        // isFull(9, 6);
+        // first column
+        open(0, 0);
+        open(1, 0);
+        open(2, 0);
+        open(3, 0);
+        open(4, 0);
+        open(5, 0);
+        open(6, 0);
+        open(6, 0);
+        open(7, 0);
+        open(8, 0);
+        open(9, 0);
+
+        boolean a = isFull(9, 6);
+        boolean b = isFull(9, 0);
+        boolean c = isFull(9, 4);
         StdOut.println(Grid);
         boolean doesPercolate = uf.find(Grid[9][6]) == uf.find(Grid[0][5]);
 
