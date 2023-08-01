@@ -6,9 +6,9 @@ public class Percolation {
     private static int TotalSitesRemaining;
 
     private static void isInputOutOfRange(int row, int col) {
-        if (row > Size)
+        if (row > Size + 1)
             throw new IllegalArgumentException("Row input is too large");
-        if (col > Size)
+        if (col > Size + 1)
             throw new IllegalArgumentException("Column input is too large");
         if (row <= 0)
             throw new IllegalArgumentException("Row input is too small");
@@ -22,10 +22,12 @@ public class Percolation {
             throw new IllegalArgumentException("size must be a non-zero positive integer");
 
         // initialize grid variables
-        uf = new WeightedQuickUnionUF(Size * Size);
-        TotalSitesRemaining = (Size * Size);
+        Size = n;
+        uf = new WeightedQuickUnionUF(n * n);
+        TotalSitesRemaining = (n * n);
+        Grid = new int[n][n];
 
-        return new int[n][n];
+        return Grid;
     }
 
     // opens the site (row, col) if it is not open already
@@ -75,9 +77,9 @@ public class Percolation {
 
         connectAllSites(row, col);
         for (int i = 1; i <= Size; i++) {
-            boolean SiteIsOpen = Grid[row - 1][col - 1] != 0 && Grid[9][i - 1] != 0;
+            boolean SiteIsOpen = Grid[row - 1][col - 1] != 0 && Grid[Size - 1][i - 1] != 0;
             if (SiteIsOpen) {
-                boolean SitesAreConnected = uf.find(Grid[row - 1][col - 1] - 1) == uf.find(Grid[9][i - 1] - 1);
+                boolean SitesAreConnected = uf.find(Grid[row - 1][col - 1] - 1) == uf.find(Grid[Size - 1][i - 1] - 1);
                 if (SitesAreConnected) {
                     return true;
                 }
@@ -100,7 +102,7 @@ public class Percolation {
             }
         }
         return false;
-    } 
+    }
 
     // test client (optional)
     public static void main(String[] args) {
