@@ -60,19 +60,10 @@ public class Percolation {
             if (NotOutOfBounds) {
                 boolean BothSitesAreOpen = isOpen(row, col) && Grid[row - 1 + RowDir][col - 1 + ColDir] != 0;
                 if (BothSitesAreOpen) {
-
-                    int x = uf.find(Grid[row - 1][col - 1] - 1);
-                    int y = uf.find(Grid[row - 1 + RowDir][col - 1 + ColDir] - 1);
-
-                    int a = Grid[row - 1][col - 1];
-                    int b = Grid[row - 1 + RowDir][col - 1 + ColDir];
-
-
                     boolean SitesAreNotConnected = Grid[row - 1][col - 1] != Grid[row - 1 + RowDir][col - 1 + ColDir];
                     if (SitesAreNotConnected) {
                         uf.union(Grid[row - 1][col - 1] - 1, Grid[row - 1 + RowDir][col - 1 + ColDir] - 1); // connect the sites
                         Grid[row - 1 + RowDir][col - 1 + ColDir] = uf.find(Grid[row - 1][col - 1] - 1) + 1; // update the grid to the root value
-                        connectAllSites(row + RowDir, col + ColDir); // check if full
                     }
                 }
             }
@@ -83,8 +74,6 @@ public class Percolation {
     // is the site (row, col) full?
     public static boolean isFull(int row, int col) {
         isInputOutOfRange(row, col);
-
-        connectAllSites(row, col);
         for (int i = 1; i <= Size; i++) {
             boolean SiteIsOpen = Grid[row - 1][col - 1] != 0 && Grid[Size - 1][i - 1] != 0;
             if (SiteIsOpen) {

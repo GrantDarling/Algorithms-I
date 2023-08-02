@@ -45,7 +45,7 @@ public class PercolationStats {
 
     // perform independent trials on an n-by-n grid
     public static void percolationStats(int n, int trials) {
-        while (!Percolation.percolates()) {
+        while (!Percolation.percolates()) { // Since Percolation uses static variables, we are creating a memory leak by continuing to re-running this method
             openNextClosedSite();
         }
 
@@ -60,33 +60,39 @@ public class PercolationStats {
             Percolation.percolation(Size);
             initializeRandomizedSiteArray(Size);
             percolationStats(n, trials);
-        } else {
-            System.out.println("Hello World!");
         }
     }
 
     // sample mean of percolation threshold
-    public double mean() {
-        return 1.0;
+    public static double mean() {
+        return StdStats.mean(PercolationThreshold);
     }
 
     // sample standard deviation of percolation threshold
-    public double stddev() {
-        return 1.0;
+    public static double stddev() {
+        return StdStats.stddev(PercolationThreshold);
     }
 
     // low endpoint of 95% confidence interval
-    public double confidenceLo() {
-        return 1.0;
+    public static double confidenceLo() {
+        double mean = mean();
+        double s = stddev();
+        double tSqrt = Math.sqrt(PercolationThreshold.length);
+        return (mean - (1.96 * s / tSqrt));
     }
 
     // high endpoint of 95% confidence interval
-    public double confidenceHi() {
-        return 1.0;
+    public static double confidenceHi() {
+        double mean = mean();
+        double s = stddev();
+        double tSqrt = Math.sqrt(PercolationThreshold.length);
+        return mean + (1.96 * s / tSqrt);
     }
 
     // test client (see below)
     public static void main(String[] args) {
+        Stopwatch time;
+        time = new Stopwatch();
         Size = Integer.parseInt(args[0]);
         Trials = Integer.parseInt(args[1]);
         PercolationThreshold = new double[Trials];
@@ -94,6 +100,13 @@ public class PercolationStats {
         Percolation.percolation(Size);
         initializeRandomizedSiteArray(Size);
         percolationStats(Size, Trials);
+
+        // System.out.println(Arrays.toString(PercolationThreshold));
+
+        System.out.printf("Mean value is         %f \n", mean());
+        System.out.printf("Standard deviation is %f \n", stddev());
+        System.out.printf("95 confidence interval =[ %f, %f ] \n", confidenceLo(), confidenceHi());
+        System.out.printf("Time Elapsed: %f", time.elapsedTime());
 
 
     }
