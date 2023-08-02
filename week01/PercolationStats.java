@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class PercolationStats {
     private static int Size;
     private static int Trials;
@@ -56,9 +54,6 @@ public class PercolationStats {
             double NumberOfSitesOpen = Percolation.numberOfOpenSites();
             double CurrentThreshold = NumberOfSitesOpen / TotalNumberOfSites;
             PercolationThreshold[CurrentTrial] = CurrentThreshold;
-            System.out.println("Hello World!");
-            double[] x = PercolationThreshold;
-            StdOut.println(Arrays.toString(x));
 
             CurrentTrial++;
             nextClosedSite = 0;
@@ -66,9 +61,6 @@ public class PercolationStats {
             initializeRandomizedSiteArray(Size);
             percolationStats(n, trials);
         } else {
-            double[] x = PercolationThreshold;
-            StdOut.println(Arrays.toString(x));
-            System.out.println(Arrays.toString(x));
             System.out.println("Hello World!");
         }
     }
@@ -98,7 +90,7 @@ public class PercolationStats {
         Size = Integer.parseInt(args[0]);
         Trials = Integer.parseInt(args[1]);
         PercolationThreshold = new double[Trials];
-        System.out.println("Hello World!");
+
         Percolation.percolation(Size);
         initializeRandomizedSiteArray(Size);
         percolationStats(Size, Trials);

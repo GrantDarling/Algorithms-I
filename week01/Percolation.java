@@ -38,6 +38,7 @@ public class Percolation {
             int currentRow = ((row - 1) * Size);
             Grid[row - 1][col - 1] = currentRow + col;
             TotalSitesRemaining--;
+            connectAllSites(row, col);
         }
     }
 
@@ -49,7 +50,7 @@ public class Percolation {
 
     // connect all sites
     public static void connectAllSites(int row, int col) {
-        int[][] Directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        int[][] Directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
         for (int[] direction : Directions) {
             int RowDir = direction[0];
@@ -59,7 +60,15 @@ public class Percolation {
             if (NotOutOfBounds) {
                 boolean BothSitesAreOpen = isOpen(row, col) && Grid[row - 1 + RowDir][col - 1 + ColDir] != 0;
                 if (BothSitesAreOpen) {
-                    boolean SitesAreNotConnected = uf.find(Grid[row - 1][col - 1] - 1) != uf.find(Grid[row - 1 + RowDir][col - 1 + ColDir] - 1);
+
+                    int x = uf.find(Grid[row - 1][col - 1] - 1);
+                    int y = uf.find(Grid[row - 1 + RowDir][col - 1 + ColDir] - 1);
+
+                    int a = Grid[row - 1][col - 1];
+                    int b = Grid[row - 1 + RowDir][col - 1 + ColDir];
+
+
+                    boolean SitesAreNotConnected = Grid[row - 1][col - 1] != Grid[row - 1 + RowDir][col - 1 + ColDir];
                     if (SitesAreNotConnected) {
                         uf.union(Grid[row - 1][col - 1] - 1, Grid[row - 1 + RowDir][col - 1 + ColDir] - 1); // connect the sites
                         Grid[row - 1 + RowDir][col - 1 + ColDir] = uf.find(Grid[row - 1][col - 1] - 1) + 1; // update the grid to the root value
