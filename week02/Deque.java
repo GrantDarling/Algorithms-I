@@ -100,34 +100,32 @@ public class Deque<Item> implements Iterable<Item> {
         return item;
     }
 
-    // may not be needed
-    Iterator<Item> iterator;
-    // end may not be needed
-
     // return an iterator over items in order from front to back
     public Iterator<Item> iterator() {
-        return iterator;
+        return new DequeIterator();
+    }
+
+    private class DequeIterator implements Iterator<Item> {
+        private Node<Item> current = first;
+
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        public Item next() {
+            if (!hasNext())
+                throw new NoSuchElementException();
+            Item item = current.item;
+            current = current.next;
+            return item;
+        }
     }
 
     // unit testing (required)
     public static void main(String[] args) {
-        Deque<String> deque1 = new Deque<String>();
-        deque1.addFirst("1");
-        deque1.removeLast();
-        deque1.removeLast();
-//        deque1.addFirst("hey");
-//        deque1.addFirst("17");
-//
-//        deque1.addLast("4");
-//        deque1.addLast("4ey");
-//        deque1.addLast("47");
-//
-//        deque1.removeLast();
-//        deque1.addLast("77");
-//        deque1.addLast("88");
-
-        System.out.printf("Size is %d \n", deque1.size());
-        System.out.printf("first is %s \n", deque1.first);
-        System.out.printf("first is %s \n", deque1.last);
     }
 }
